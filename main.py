@@ -35,11 +35,9 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = query.from_user
 
     if query.data == "start_clicked":
-        await context.bot.send_message(chat_id=chat_id, text="⏳ Загружаю...")
-await asyncio.sleep(1)
-await context.bot.send_message(chat_id=chat_id, text="🚀 Почти готово!")
-await asyncio.sleep(1)
-await context.bot.send_message(chat_id=chat_id, text="✨ Готово!")
+        await context.bot.send_message(chat_id=chat_id, text="⏳ Подготовка адреса TON...")
+        await asyncio.sleep(1)  # Задержка 5 секунд
+        await context.bot.send_message(chat_id=chat_id, text="⏳ Готово...")
         
         ton_keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("💎 Узнать адрес TON", callback_data="get_ton")]
@@ -50,7 +48,7 @@ await context.bot.send_message(chat_id=chat_id, text="✨ Готово!")
         ton_address = "EQC1234567890TONaddress..."  # ← ВСТАВЬ СВОЙ TON-АДРЕС
         await context.bot.send_message(
             chat_id=chat_id,
-            text=f"💎 Адрес USDT:\n`{ton_address}`",
+            text=f"💎 Адрес TON:\n`{ton_address}`",
             parse_mode="Markdown"
         )
 
