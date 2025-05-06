@@ -16,11 +16,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     user = query.from_user
 
-if query.data == "start_clicked":
+    if query.data == "start_clicked":
         message = (
-    f"🌟 Добро пожаловать, {user.first_name}!\n\n"
-    "Ты можешь поддержать нас переводом на TON. 😊""
-)
+            f"🌟 Добро пожаловать, {user.first_name}!
+
+"
+            "Ты можешь поддержать нас переводом на TON."
+        )
         await context.bot.send_message(chat_id=query.message.chat_id, text=message)
 
         ton_keyboard = [[InlineKeyboardButton("💎 Узнать адрес TON", callback_data="get_ton")]]
@@ -28,7 +30,7 @@ if query.data == "start_clicked":
         await context.bot.send_message(chat_id=query.message.chat_id, text="👇 Нажми кнопку:", reply_markup=reply_markup)
 
     elif query.data == "get_ton":
-        ton_address = "EQC1234567890TONaddress..."  # Замени на свой TON-адрес
+        ton_address = "EQC1234567890TONaddress..."  # Замените на свой TON-адрес
         await context.bot.send_message(
             chat_id=query.message.chat_id,
             text=f"💎 Адрес TON:
