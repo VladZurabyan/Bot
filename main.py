@@ -29,12 +29,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(chat_id=query.message.chat_id, text="👇 Нажми кнопку:", reply_markup=reply_markup)
 
     elif query.data == "get_ton":
-        ton_address = "EQC1234567890TONaddress..."  # Замените на свой TON-адрес
-        await context.bot.send_message(
-            chat_id=query.message.chat_id,
-            text=f"💎 Адрес TON:\n`{ton_address}`"
-            parse_mode="Markdown"
-        )
+        ton_address = "EQC1234567890TONaddress..."  # Замените на свой адрес
+ton_message = "💎 Адрес TON:\n`" + ton_address + "`"
+await context.bot.send_message(
+    chat_id=query.message.chat_id,
+    text=ton_message,
+    parse_mode="Markdown"
+)
 
 async def block_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
