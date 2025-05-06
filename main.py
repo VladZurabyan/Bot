@@ -1,46 +1,52 @@
 import os
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
-TOKEN = os.getenv("TOKEN")  # Получаем токен из переменной окружения
+TOKEN = os.getenv("TOKEN")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
-        [InlineKeyboardButton("🚀 Начать", callback_data="start_clicked")],
-        [InlineKeyboardButton("💸 Адрес TRON (TRC-20)", callback_data="get_tron")]
+        [InlineKeyboardButton("🚀 Начать", callback_data="start_clicked")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text="👋 Привет! Нажми кнопку ниже, чтобы начать:",
-        reply_markup=reply_markup
-    )
+    await update.message.reply_text("👋 Привет! Нажми кнопку ниже, чтобы начать:", reply_markup=reply_markup)
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
-
     user = query.from_user
 
     if query.data == "start_clicked":
         message = (
-    f"🌟 Добро пожаловать, {user.first_name}!\n\n"
-    "Мы рады видеть тебя в нашем Telegram-боте. Надеемся, что ты поможешь с донатом! 😊"
-)
+            f"🌟 Добро пожаловать, {user.first_name}!
 
-        with open("welcome.jpg", "rb") as photo:
-            await context.bot.send_photo(chat_id=query.message.chat_id, photo=photo, caption=message)
+"
+            "Ты можешь поддержать нас переводом на TON."
+        )
+        await context.bot.send_message(chat_id=query.message.chat_id, text=message)
 
-    elif query.data == "get_tron":
-        tron_address = "TABC1234567890XYZ..."  # Замените на свой реальный адрес TRC-20
+        ton_keyboard = [[InlineKeyboardButton("💎 Узнать адрес TON", callback_data="get_ton")]]
+        reply_markup = InlineKeyboardMarkup(ton_keyboard)
+        await context.bot.send_message(chat_id=query.message.chat_id, text="👇 Нажми кнопку:", reply_markup=reply_markup)
+
+    elif query.data == "get_ton":
+        ton_address = "EQC1234567890TONaddress..."  # Замени на свой TON-адрес
         await context.bot.send_message(
             chat_id=query.message.chat_id,
-            text=f"💰 Адрес TRON (TRC-20):\n`{tron_address}`",
+            text=f"💎 Адрес TON:
+`{ton_address}`",
             parse_mode="Markdown"
         )
+
+async def block_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        await update.message.delete()
+    except:
+        pass
 
 if __name__ == "__main__":
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button_handler))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, block_messages))
     app.run_polling()
