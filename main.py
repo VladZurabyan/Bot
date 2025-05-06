@@ -19,7 +19,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Отправка изображения
     with open("welcome.jpg", "rb") as photo:
-        caption = f"🌟 Добро пожаловать, {user.first_name}!\n\nТы можешь поддержать нас переводом на TON."
+        caption = f"🌟 Добро пожаловать, {user.first_name}!\n\nТы можешь поддержать нас переводом на USDT."
         await context.bot.send_photo(chat_id=chat_id, photo=photo, caption=caption)
 
     # Анимация кнопки "Начать"
@@ -36,7 +36,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     final_keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("🚀 Начать", callback_data="start_clicked")]
     ])
-    await msg.edit_text("👇 Готово! Нажми кнопку ниже:", reply_markup=final_keyboard)
+    await msg.edit_text("👇 Готово!", reply_markup=final_keyboard)
 
 # Обработка кнопок
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -46,7 +46,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = query.from_user
 
     if query.data == "start_clicked":
-        await context.bot.send_message(chat_id=chat_id, text="⏳ Подготовка адреса TON...")
+        await context.bot.send_message(chat_id=chat_id, text="⏳ Подготовка адреса UST...")
         await asyncio.sleep(2)  # Задержка 5 секунд
 
         ton_keyboard = InlineKeyboardMarkup([
@@ -58,7 +58,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ton_address = "EQC1234567890TONaddress..."  # ← ВСТАВЬ СВОЙ TON-АДРЕС
         await context.bot.send_message(
             chat_id=chat_id,
-            text=f"💎 Адрес TON:\n`{ton_address}`",
+            text=f"💎 Адрес USDT:\n`{ton_address}`",
             parse_mode="Markdown"
         )
 
