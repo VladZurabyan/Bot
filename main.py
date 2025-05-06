@@ -19,8 +19,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     user = query.from_user
-    message = f"🌟 Добро пожаловать, {user.first_name}!
-\n"               f"Мы рады видеть тебя в нашем Telegram-боте. Надеемся, тебе понравится! 😊"
+    message = (
+    f"🌟 Добро пожаловать, {user.first_name}!\n\n"
+    "Мы рады видеть тебя в нашем Telegram-боте. Надеемся, тебе понравится! 😊"
+)
 
     with open("welcome.jpg", "rb") as photo:
         await context.bot.send_photo(chat_id=query.message.chat_id, photo=photo, caption=message)
