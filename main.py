@@ -28,7 +28,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     "Мы рады видеть тебя в нашем Telegram-боте. Надеемся, тебе понравится! 😊"
 )
 
-        with open("welcome_usdt_bright.jpg", "rb") as photo:
+        with open("welcome.jpg", "rb") as photo:
             await context.bot.send_photo(chat_id=query.message.chat_id, photo=photo, caption=message)
 
     elif query.data == "get_tron":
