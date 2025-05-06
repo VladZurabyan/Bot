@@ -1,30 +1,56 @@
 import os
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, InputFile
+import asyncio
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
-TOKEN = os.getenv("TOKEN")  # Убедись, что переменная TOKEN задана
+TOKEN = os.getenv("TOKEN")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
 
-    # Отправка фото с приветствием
-    with open("welcome.jpg", "rb") as photo:  # Замените на путь к своему файлу
+    # Отправка приветственного изображения
+    with open("welcome.jpg", "rb") as photo:
         caption = f"🌟 Добро пожаловать, {user.first_name}!\n\nТы можешь поддержать нас переводом на TON."
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo, caption=caption)
 
-    # Кнопка "Узнать адрес"
-    keyboard = [[InlineKeyboardButton("💎 Узнать адрес TON", callback_data="get_ton")]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("👇 Нажми кнопку:", reply_markup=reply_markup)
+    # Кнопка "Начать" — по центру
+    start_keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🚀 Начать", callback_data="start_clicked")]
+    ])
+    await update.message.reply_text("👇 Нажми кнопку ниже:", reply_markup=start_keyboard)
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    chat_id = query.message.chat_id
+    user = query.from_user
 
-    if query.data == "get_ton":
-        ton_address = "EQC1234567890TONaddress..."  # замените на свой адрес
-        text = f"💎 Адрес TON:\n`{ton_address}`"
-        await context.bot.send_message(chat_id=query.message.chat_id, text=text, parse_mode="Markdown")
+    if query.data == "start_clicked":
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text="⏳ Подготовка адреса TON..."
+        )
+
+        # Задержка 5 секунд
+        await asyncio.sleep(5)
+
+        # Кнопка "Узнать адрес TON" — по центру
+        ton_keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("💎 Узнать адрес TON", callback_data="get_ton")]
+        ])
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text="Готово! Нажми кнопку ниже:",
+            reply_markup=ton_keyboard
+        )
+
+    elif query.data == "get_ton":
+        ton_address = "EQC1234567890TONaddress..."  # Замените на свой TON адрес
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text=f"💎 Адрес TON:\n`{ton_address}`",
+            parse_mode="Markdown"
+        )
 
 async def block_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
