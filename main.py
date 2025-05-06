@@ -25,7 +25,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query.data == "start_clicked":
         message = (
     f"🌟 Добро пожаловать, {user.first_name}!\n\n"
-    "Мы рады видеть тебя в нашем Telegram-боте. Надеемся, тебе понравится! 😊"
+    "Мы рады видеть тебя в нашем Telegram-боте. Надеемся, что ты поможешь с донатом! 😊"
 )
 
         with open("welcome.jpg", "rb") as photo:
