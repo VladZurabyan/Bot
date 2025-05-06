@@ -10,38 +10,57 @@ from telegram.ext import (
     filters,
 )
 
-TOKEN = os.getenv("TOKEN")  # Задай переменную TOKEN в окружении
+TOKEN = os.getenv("TOKEN")  # Установи переменную окружения TOKEN
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
 
-    # Отправка фото с приветствием
+    # Приветствие с картинкой
     with open("welcome.jpg", "rb") as photo:
-        caption = f"🌟 Добро пожаловать, {user.first_name}!\n\nТы можешь поддержать нас переводом на TON."
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo, caption=caption)
+        caption = (
+            f"✨\n\n"
+            f"🌟 *Добро пожаловать, {user.first_name}!* 🌟\n\n"
+            f"_Ты можешь поддержать нас переводом на TON._\n\n"
+            f"✨"
+        )
+        await context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=photo,
+            caption=caption,
+            parse_mode="Markdown"
+        )
 
     # Ждём 5 секунд
     await asyncio.sleep(5)
 
-    # Отправляем кнопку "Узнать адрес TON"
+    # Кнопка — одна и по центру
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("💎 Узнать адрес TON", callback_data="get_ton")]
     ])
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="👇 Нажми кнопку ниже:", reply_markup=keyboard)
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="👇",
+        reply_markup=keyboard
+    )
 
+# Ответ на кнопку
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
 
     if query.data == "get_ton":
-        ton_address = "EQC1234567890TONaddress..."  # Замени на свой адрес
+        ton_address = "EQC1234567890TONaddress..."  # ← Замени на свой TON-адрес
+        message = (
+            f"💎 *TON адрес для поддержки:*\n\n"
+            f"`{ton_address}`"
+        )
         await context.bot.send_message(
             chat_id=query.message.chat_id,
-            text=f"💎 Адрес TON:\n`{ton_address}`",
+            text=message,
             parse_mode="Markdown"
         )
 
-# Удаление всех текстовых сообщений от пользователей
+# Удаление всех пользовательских сообщений
 async def block_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         await update.message.delete()
