@@ -40,7 +40,7 @@ await asyncio.sleep(1)
 await context.bot.send_message(chat_id=chat_id, text="🚀 Почти готово!")
 await asyncio.sleep(1)
 await context.bot.send_message(chat_id=chat_id, text="✨ Готово!")
-        await asyncio.sleep(2)  # Задержка 5 секунд
+        
 
         ton_keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("💎 Узнать адрес TON", callback_data="get_ton")]
