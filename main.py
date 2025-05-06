@@ -32,8 +32,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ton_address = "EQC1234567890TONaddress..."  # Замените на свой TON-адрес
         await context.bot.send_message(
             chat_id=query.message.chat_id,
-            text=f"💎 Адрес TON:
-`{ton_address}`",
+            text=f"💎 Адрес TON:\n`{ton_address}`"
             parse_mode="Markdown"
         )
 
