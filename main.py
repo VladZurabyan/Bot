@@ -15,28 +15,28 @@ TOKEN = os.getenv("TOKEN")  # Задай TOKEN через переменную �
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
+    chat_id = update.effective_chat.id
 
-    # Отправляем изображение с приветствием
+    # Отправка изображения
     with open("welcome.jpg", "rb") as photo:
         caption = f"🌟 Добро пожаловать, {user.first_name}!\n\nТы можешь поддержать нас переводом на TON."
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo, caption=caption)
+        await context.bot.send_photo(chat_id=chat_id, photo=photo, caption=caption)
 
-    # Кнопка "Начать" с эффектом анимации
-loading_frames = ["🌑", "🌓", "🌔", "🌕", "🌝", "🌞", "🚀"]
-msg = await context.bot.send_message(chat_id=chat_id, text="⏳ Подготовка кнопки...")
+    # Анимация кнопки "Начать"
+    loading_frames = ["🌑", "🌓", "🌔", "🌕", "🌝", "🌞", "🚀"]
+    msg = await context.bot.send_message(chat_id=chat_id, text="⏳ Подготовка кнопки...")
 
-for frame in loading_frames:
-    keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton(f"{frame} Начать", callback_data="start_clicked")]
+    for frame in loading_frames:
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton(f"{frame} Начать", callback_data="start_clicked")]
+        ])
+        await msg.edit_reply_markup(reply_markup=keyboard)
+        await asyncio.sleep(0.4)
+
+    final_keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🚀 Начать", callback_data="start_clicked")]
     ])
-    await msg.edit_reply_markup(reply_markup=keyboard)
-    await asyncio.sleep(0.4)
-
-# Финальный вариант кнопки
-final_keyboard = InlineKeyboardMarkup([
-    [InlineKeyboardButton("🚀 Начать", callback_data="start_clicked")]
-])
-await msg.edit_text("👇 Готово! Нажми кнопку ниже:", reply_markup=final_keyboard)
+    await msg.edit_text("👇 Готово! Нажми кнопку ниже:", reply_markup=final_keyboard)
 
 # Обработка кнопок
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
